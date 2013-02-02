@@ -30,13 +30,6 @@ public class Main extends Application{
 		Group root = new Group();
 		mainFrame = new MainFrame(root);
 		
-//		background = new ImageView();
-//		background.setFocusTraversable(true);
-//		background.setImage(Config.getImages().get(Config.IMAGE_BACKGROUND));
-//		background.setFitWidth(Config.SCREEN_WIDTH);
-//		background.setFitHeight(Config.SCREEN_HEIGHT);
-//		background.requestFocus();
-//		root.getChildren().add(background);
 		
 		
 		stage.setTitle("Tower of Hanoi");
