@@ -23,6 +23,13 @@ public class Config {
 	public static final int IMAGE_DISC_LEFT = 2;
 	public static final int IMAGE_DISC_CENTER = 3;
 	public static final int IMAGE_DISC_RIGHT = 4;
+	public static final int SHADOW_WIDTH = 10;
+	public static final int TOWER_ONE_X = 130;
+	public static final int TOWER_TWO_X = 395;
+	public static final int TOWER_THREE_X = 660;
+	//bottom of the tower
+	public static final int BOTTOM = 385;
+	
 	
 	public static final int WINDOW_BORDER = 3;
 	public static final int TITLE_BAR_HEIGHT = 19;

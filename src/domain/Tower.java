@@ -1,7 +1,8 @@
 package domain;
 
+import gui.Disc;
+
 import java.util.ArrayList;
-import domain.Disc;
 
 //domain by Ebbe Vang
 
