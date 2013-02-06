@@ -2,21 +2,13 @@ package gui;
 
 import domain.Config;
 
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
 public class Game extends Parent {
-	private final BooleanProperty dragModeActiveProperty =
-            new SimpleBooleanProperty(this, "dragModeActive", true);
+	
 	private ImageView background;
 	private ImageView tower1;
 	private ImageView tower2;
@@ -27,15 +19,13 @@ public class Game extends Parent {
 	
 	Game() {
 		initializeGui();
-		Disc disc1 = new Disc(1);
-		final Node disc = makeDraggable(disc1);
+		disc1 = new Disc(1);
 		
-		
-		disc.relocate(Config.TOWER_ONE_X-(disc1.getWidth()/2), Config.BOTTOM);
+		disc1.relocate(Config.TOWER_ONE_X-(disc1.getWidth()/2), Config.BOTTOM);
 
 		
 		Group group = new Group();
-		group.getChildren().addAll(background,tower1,tower2,tower3, disc);
+		group.getChildren().addAll(background,tower1,tower2,tower3, disc1);
 		getChildren().add(group);
 		
 		
@@ -43,59 +33,7 @@ public class Game extends Parent {
 
 
 
-	private Node makeDraggable(final Node node) {
-        final DragContext dragContext = new DragContext();
-        final Group wrapGroup = new Group(node);
-
-        wrapGroup.addEventFilter(
-                MouseEvent.ANY,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // disable mouse events for all children
-                            mouseEvent.consume();
-                        }
-                    }
-                });
-
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_PRESSED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // remember initial mouse cursor coordinates
-                            // and node position
-                            dragContext.mouseAnchorX = mouseEvent.getX();
-                            dragContext.mouseAnchorY = mouseEvent.getY();
-                            dragContext.initialTranslateX =
-                                    node.getTranslateX();
-                            dragContext.initialTranslateY =
-                                    node.getTranslateY();
-                        }
-                    }
-                });
-
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_DRAGGED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // shift node from its initial position by delta
-                            // calculated from mouse cursor movement
-                            node.setTranslateX(
-                                    dragContext.initialTranslateX
-                                        + mouseEvent.getX()
-                                        - dragContext.mouseAnchorX);
-                            node.setTranslateY(
-                                    dragContext.initialTranslateY
-                                        + mouseEvent.getY()
-                                        - dragContext.mouseAnchorY);
-                        }
-                    }
-                });
-                
-        return wrapGroup;
-    }
+	
 
 
 	private void initializeGui() {
@@ -138,11 +76,6 @@ public class Game extends Parent {
 		disc.setTranslateY(y);
 		
 	}
-	 private static final class DragContext {
-	        public double mouseAnchorX;
-	        public double mouseAnchorY;
-	        public double initialTranslateX;
-	        public double initialTranslateY;
-	    }
+	
 
 }

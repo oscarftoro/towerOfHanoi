@@ -42,7 +42,7 @@ public class Config {
 
 	public static void initialize(){
 		for (String imageName : IMAGES_NAMES) {
-			System.out.println(imageName);
+			
 			Image image = new Image(Config.class.getResourceAsStream(IMAGE_DIR + imageName));
 			if (image.isError()) {
 				System.out.println("Image " +imageName+" was not found");

@@ -32,9 +32,12 @@
 package gui;
 
 import domain.Config;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,6 +48,8 @@ import javafx.scene.input.MouseEvent;
 //Implementation Oscar Toro
 
 public class Disc extends Parent{
+	private final BooleanProperty dragModeActiveProperty =
+            new SimpleBooleanProperty(this, "dragModeActive", true);
 	private int size;
 	private int height;
 	private int width;
@@ -77,19 +82,11 @@ public class Disc extends Parent{
 		rightImageView = new ImageView();
 		rightImageView.setImage(RIGHT);
 		changeSize(7);
+		makeDraggable(group);
 		group.getChildren().addAll(leftImageView,centerImageView,rightImageView);
-//		group.setOnMouseDragged(new EventHandler<MouseEvent>() {
-//            public void handle(MouseEvent mouseEvent) {
-//            
-//                    group.setTranslateX(mouseEvent.getX());
-//                    group.setTranslateY(mouseEvent.getY());
-//                    
-//               
-//              
-//            }
-//        });
 		
-		getChildren().add(group);
+		
+		getChildren().add(makeDraggable(group));
 		//drag the disc from the middle
 		this.setLayoutX(getLayoutXDisc());
 	}
@@ -117,10 +114,69 @@ public class Disc extends Parent{
 	public double getLayoutXDisc() {
 		return layoutX;
 	}
+	private Node makeDraggable(final Node node) {
+        final DragContext dragContext = new DragContext();
+        final Group wrapGroup = new Group(node);
+
+        wrapGroup.addEventFilter(
+                MouseEvent.ANY,
+                new EventHandler<MouseEvent>() {
+                    public void handle(final MouseEvent mouseEvent) {
+                        if (dragModeActiveProperty.get()) {
+                            // disable mouse events for all children
+                            mouseEvent.consume();
+                        }
+                    }
+                });
+
+        wrapGroup.addEventFilter(
+                MouseEvent.MOUSE_PRESSED,
+                new EventHandler<MouseEvent>() {
+                    public void handle(final MouseEvent mouseEvent) {
+                        if (dragModeActiveProperty.get()) {
+                            // remember initial mouse cursor coordinates
+                            // and node position
+                            dragContext.mouseAnchorX = mouseEvent.getX();
+                            dragContext.mouseAnchorY = mouseEvent.getY();
+                            dragContext.initialTranslateX =
+                                    node.getTranslateX();
+                            dragContext.initialTranslateY =
+                                    node.getTranslateY();
+                        }
+                    }
+                });
+
+        wrapGroup.addEventFilter(
+                MouseEvent.MOUSE_DRAGGED,
+                new EventHandler<MouseEvent>() {
+                    public void handle(final MouseEvent mouseEvent) {
+                        if (dragModeActiveProperty.get()) {
+                            // shift node from its initial position by delta
+                            // calculated from mouse cursor movement
+                            node.setTranslateX(
+                                    dragContext.initialTranslateX
+                                        + mouseEvent.getX()
+                                        - dragContext.mouseAnchorX);
+                            node.setTranslateY(
+                                    dragContext.initialTranslateY
+                                        + mouseEvent.getY()
+                                        - dragContext.mouseAnchorY);
+                        }
+                    }
+                });
+                
+        return wrapGroup;
+    }
 	@Override
 	public String toString() {
 		
 		return Integer.toString(size);
 	}
+	 private static final class DragContext {
+	        public double mouseAnchorX;
+	        public double mouseAnchorY;
+	        public double initialTranslateX;
+	        public double initialTranslateY;
+	 }
 	
 }
